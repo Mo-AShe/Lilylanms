@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog Details- Lily Land</title>
+    <title>Dog Details - Lily Land</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -44,7 +44,6 @@
             .nav-header { grid-column: span 2; }
         }
 
-        /* Glass Cards */
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(10px);
@@ -58,9 +57,8 @@
         .back-link { text-decoration: none; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; }
 
         .hero-card { text-align: center; border-top: 6px solid var(--primary); }
-        .hero-card h1 { margin: 10px 0; font-size: 2.2rem; color: var(--dark); }
+        .hero-card h1 { margin: 10px 0; font-size: 2.2rem; color: var(--dark); display: flex; align-items: center; justify-content: center; gap: 12px; }
         
-        /* Payment Desk Styles */
         .action-card { color: white; text-align: center; }
         .desk-paid { background: rgba(39, 174, 96, 0.9); }
         .desk-overdue { background: rgba(231, 76, 60, 0.9); }
@@ -89,24 +87,49 @@
 
         .data-label { font-weight: 700; color: var(--primary); font-size: 0.8rem; text-transform: uppercase; width: 40%; }
         .data-val { font-weight: 500; color: #2c3e50; width: 50%; }
-        .edit-trigger { color: #95a5a6; cursor: pointer; padding: 5px; }
-        .edit-trigger:hover { color: var(--primary); }
+        .edit-trigger { color: #95a5a6; cursor: pointer; padding: 5px; transition: 0.2s; }
+        .edit-trigger:hover { color: var(--primary); transform: scale(1.1); }
 
-        /* Modal */
+        /* Modal Styles */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
             display: none; align-items: center; justify-content: center; z-index: 1000;
         }
 
-        .modal-window { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
-        .modal-window input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; }
+        .modal-window { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
+        .modal-window input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
 
-        .btn { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; flex: 1; }
+        .btn { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; flex: 1; transition: 0.3s; }
         .btn-save { background: var(--primary); color: white; }
-        .btn-cancel { background: #eee; }
+        .btn-cancel { background: #eee; color: #666; }
+        
         .pay-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: white; color: var(--dark); font-weight: 800; cursor: pointer; }
-        .delete-btn { width: 100%; padding: 12px; border: none; background: none; color: var(--danger); font-weight: 700; cursor: pointer; text-decoration: underline; }
+        
+        /* Delete Section Styles */
+        .delete-container {
+            margin-top: 20px; 
+            padding: 30px; 
+            border: 3px dashed rgba(231, 76, 60, 1); 
+            border-radius: 20px; 
+            text-align: center; 
+            background: rgba(255, 255, 255, 0.7);
+            grid-column: span 1;
+        }
+        @media (min-width: 992px) { .delete-container { grid-column: span 2; } }
+
+        .delete-btn { 
+            background: var(--danger); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            padding: 15px 40px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        .delete-btn:hover { background: #c0392b; transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -114,46 +137,60 @@
 <div class="page-wrapper">
     <div class="modal-overlay" id="editModal">
         <div class="modal-window">
-            <h3 id="modalTitle">Edit Field</h3>
+            <h3 id="modalTitle" style="color: var(--primary);">Update Information</h3>
             <div id="inputContainer"></div>
             <div style="display:flex; gap:10px;">
                 <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-save" id="saveBtn" onclick="processSave()">Save</button>
+                <button class="btn btn-save" id="saveBtn" onclick="processSave()">Save Changes</button>
             </div>
         </div>
     </div>
 
     <div class="container">
         <nav class="nav-header glass-card">
-            <a href="start-journy.htm" class="back-link"><i class="fas fa-arrow-left"></i> Back to Pack</a>
+            <a href="start-journy.htm" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
         </nav>
 
         <section class="hero-card glass-card">
-            <div style="font-size: 3rem; color: var(--primary);">
-                <i class="fas fa-dog"></i>
+            <div style="font-size: 3.5rem; color: var(--primary); margin-bottom: 10px;">
+                <i class="fas fa-paw"></i>
             </div>
-            <h1 id="dogName">...</h1>
-            <p id="ownerName"></p>
-            <h3 id="paymentAmountDisplay" style="color: var(--primary);">$0.00 / month</h3>
+            <h1>
+                <span id="dogName">Loading...</span>
+                <i class="fas fa-pen edit-trigger" title="Edit Name" onclick="openModal('Name', false)"></i>
+            </h1>
+            <p id="ownerName" style="font-weight: 600; color: var(--text-muted);"></p>
+            <h3 id="paymentAmountDisplay" style="color: var(--success);">$0.00 / month</h3>
         </section>
 
         <aside class="glass-card action-card desk-default" id="paymentDesk">
-            <h3 style="margin:0;"><i class="fas fa-wallet"></i> Payment Desk</h3>
+            <h3 style="margin-top:0;"><i class="fas fa-money-bill-wave"></i> Payment Desk</h3>
             <div id="statusBox" class="payment-status-box">Checking...</div>
             <button id="markPaidBtn" class="pay-btn">Collect Payment</button>
-            <p id="paymentNote" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.9;"></p>
+            <p id="paymentNote" style="font-size: 0.85rem; margin-top: 10px; opacity: 0.9;"></p>
         </aside>
 
         <section class="glass-card">
-            <div style="font-weight: 800; margin-bottom: 15px;"><i class="fas fa-list"></i> General Information</div>
+            <div style="font-weight: 800; margin-bottom: 15px; color: var(--dark);">
+                <i class="fas fa-info-circle"></i> General Information
+            </div>
             <div id="mainDataGrid"></div>
         </section>
 
         <section class="glass-card">
-            <div style="font-weight: 800; margin-bottom: 15px;"><i class="fas fa-calendar-check"></i> Dates & Timeline</div>
+            <div style="font-weight: 800; margin-bottom: 15px; color: var(--dark);">
+                <i class="fas fa-calendar-alt"></i> Dates & Health Timeline
+            </div>
             <div id="datesGrid"></div>
-            <button id="deleteDogBtn" class="delete-btn" style="margin-top: 20px;">Delete Record</button>
         </section>
+
+        <div class="delete-container">
+            <h4 style="color: var(--danger); margin-bottom: 10px;"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h4>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 20px;">Deleting this record is permanent and cannot be undone.</p>
+            <button id="deleteDogBtn" class="delete-btn">
+                <i class="fas fa-trash-alt"></i> Delete Dog Profile
+            </button>
+        </div>
     </div>
 </div>
 
@@ -179,18 +216,22 @@
     let currentIsDate = false;
 
     async function fetchData() {
-        if (!dogId) return;
+        if (!dogId) {
+            alert("No Dog ID found.");
+            window.location.href = "start-journy.htm";
+            return;
+        }
         const snap = await getDoc(doc(db, "Dog", dogId));
         if (snap.exists()) render(snap.data());
+        else alert("Dog record not found.");
     }
 
     function render(data) {
         document.getElementById('dogName').innerText = data.Name || 'Unnamed Dog';
-        document.getElementById('ownerName').innerText = `Owner: ${data["Owner/Sponser"] || 'Not Assigned'}`;
+        document.getElementById('ownerName').innerText = `Owner: ${data["Owner/Sponser"] || 'N/A'}`;
         const amt = data["Monthly payment amount"] || 0;
-        document.getElementById('paymentAmountDisplay').innerText = `$${Number(amt).toLocaleString()} / Month`;
+        document.getElementById('paymentAmountDisplay').innerText = `$${Number(amt).toLocaleString()} / month`;
 
-        // Logic for Payment Desk
         const desk = document.getElementById('paymentDesk');
         const statusBox = document.getElementById('statusBox');
         const payBtn = document.getElementById('markPaidBtn');
@@ -204,12 +245,12 @@
                 desk.className = "glass-card action-card desk-overdue";
                 statusBox.innerHTML = `<i class="fas fa-clock"></i> OVERDUE`;
                 payBtn.innerText = "Renew Subscription";
-                note.innerText = "Expired on: " + due.toLocaleDateString();
+                note.innerText = "Payment expired on: " + due.toLocaleDateString();
             } else {
                 desk.className = "glass-card action-card desk-paid";
                 statusBox.innerHTML = `<i class="fas fa-check-circle"></i> ACTIVE`;
-                payBtn.innerText = "Add 30 Days";
-                note.innerText = "Next payment: " + due.toLocaleDateString();
+                payBtn.innerText = "Extend +30 Days";
+                note.innerText = "Next payment due: " + due.toLocaleDateString();
             }
         }
 
@@ -226,22 +267,25 @@
         else if (val && val.seconds) {
             displayVal = new Date(val.seconds * 1000).toLocaleDateString();
         }
-        return `<div class="data-item">
-                    <span class="data-label">${label}</span>
-                    <span class="data-val">${displayVal}</span>
-                    <i class="fas fa-pen edit-trigger" onclick="openModal('${label}', ${isDate})"></i>
-                </div>`;
+        return `
+            <div class="data-item">
+                <span class="data-label">${label}</span>
+                <span class="data-val">${displayVal}</span>
+                <i class="fas fa-pen edit-trigger" onclick="openModal('${label}', ${isDate})"></i>
+            </div>
+        `;
     }
 
     window.openModal = (fieldName, isDate) => {
-        const pass = prompt("Verification Required:");
+        const pass = prompt("Enter The Password to edit:");
         if (pass !== "Lilymod") return;
+        
         currentField = fieldName;
         currentIsDate = isDate;
         document.getElementById('modalTitle').innerText = `Update ${fieldName}`;
         document.getElementById('inputContainer').innerHTML = isDate 
             ? `<input type="date" id="modalInput">` 
-            : `<input type="text" id="modalInput" placeholder="New value...">`;
+            : `<input type="text" id="modalInput" placeholder="Enter new value...">`;
         document.getElementById('editModal').style.display = 'flex';
     };
 
@@ -250,15 +294,24 @@
     window.processSave = async () => {
         const val = document.getElementById('modalInput').value;
         if (!val) return;
+        
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.disabled = true;
+        saveBtn.innerText = "Saving...";
+
         try {
             let final = currentIsDate ? Timestamp.fromDate(new Date(val)) : (currentField.includes("amount") ? Number(val) : val);
             await updateDoc(doc(db, "Dog", dogId), new FieldPath(currentField), final);
             location.reload();
-        } catch (e) { alert(e.message); }
+        } catch (e) { 
+            alert("Error: " + e.message);
+            saveBtn.disabled = false;
+            saveBtn.innerText = "Save Changes";
+        }
     };
 
     document.getElementById('markPaidBtn').onclick = async () => {
-        if (!confirm("Add 30 days to subscription?")) return;
+        if (!confirm("Confirm payment renewal for 30 days?")) return;
         const next = new Date();
         next.setDate(next.getDate() + 30);
         await updateDoc(doc(db, "Dog", dogId), { "Monthly payment": Timestamp.fromDate(next) });
@@ -266,9 +319,12 @@
     };
 
     document.getElementById('deleteDogBtn').onclick = async () => {
-        if (prompt("Type 'Lily26' to delete:") === "Lily26") {
+        const pass = prompt("Enter The Password to confirm deletion:");
+        if (pass === "Lily26") {
             await deleteDoc(doc(db, "Dog", dogId));
             window.location.href = "start-journy.htm";
+        } else if (pass !== null) {
+            alert("Incorrect password.");
         }
     };
 
