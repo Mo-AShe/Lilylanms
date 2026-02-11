@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finances - Lily Land</title>
+    <link rel="stylesheet" href="start-journy.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --primary: #3a8b8a;
+            --border-radius: 16px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Financial Cards */
+        .finance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-card .label { 
+            margin: 0; 
+            color: var(--text-muted); 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card h2 { margin: 10px 0; font-size: 2.25rem; font-weight: 800; }
+        
+        .stat-card .desc {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .card-revenue h2 { color: var(--success); }
+        .card-expenses h2 { color: var(--danger); }
+        .card-profit h2 { color: var(--primary); }
+
+        /* Forms */
+        .forms-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) { .forms-grid { grid-template-columns: 1fr; } }
+
+        .form-card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-card h3 { margin-top: 0; font-size: 1rem; color: var(--text-main); }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-inc { background-color: var(--success); }
+        .btn-exp { background-color: var(--danger); }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Table */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f1f5f9; text-align: left; padding: 16px; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+        td { padding: 16px; border-top: 1px solid #f1f5f9; font-size: 0.95rem; }
+
+        .val-inc { color: var(--success); font-weight: 600; }
+        .val-exp { color: var(--danger); font-weight: 600; }
+
+        /* Reset Section */
+        .reset-section { text-align: center; margin-top: 20px; padding-bottom: 50px; }
+        .reset-btn {
+            background: transparent;
+            border: 1px solid #000000;
+            color: #ff0000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-btn:hover { border-color: var(--danger); color: var(--danger); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <a href="index.htm" class="back-link"><i class="fas fa-chevron-left"></i> Dashboard</a>
+        <h2 style="margin:0;">Farm Finances</h2>
+    </header>
+
+    <div class="finance-grid">
+        <div class="stat-card card-revenue">
+            <p class="label">Total Revenue</p>
+            <h2 id="totalRevenue">$0.00</h2>
+            <p class="desc">Includes all current dog subscriptions and additional income sources.</p>
+        </div>
+        <div class="stat-card card-expenses">
+            <p class="label">Total Expenses</p>
+            <h2 id="totalExpenses">$0.00</h2>
+            <p class="desc">Summary of all costs recorded for maintenance, food, and supplies.</p>
+        </div>
+        <div class="stat-card card-profit">
+            <p class="label">Net Balance</p>
+            <h2 id="netProfit">$0.00</h2>
+            <p class="desc">The remaining profit after subtracting all expenses from your revenue.</p>
+        </div>
+    </div>
+
+    <div class="forms-grid">
+        <div class="form-card">
+            <h3><i class="fas fa-plus-circle" style="color:var(--success)"></i> Add Income</h3>
+            <input type="text" id="incDesc" placeholder="Source (e.g., Sale)">
+            <input type="number" id="incAmt" placeholder="Amount ($)">
+            <button id="btnInc" onclick="save('Income')" class="action-btn btn-inc">Save Income</button>
+        </div>
+        <div class="form-card">
+            <h3><i class="fas fa-minus-circle" style="color:var(--danger)"></i> Add Expense</h3>
+            <input type="text" id="expDesc" placeholder="Reason (e.g., Food)">
+            <input type="number" id="expAmt" placeholder="Amount ($)">
+            <button id="btnExp" onclick="save('Expense')" class="action-btn btn-exp">Save Expense</button>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Date</th><th>Source / Reason</th><th>Amount</th></tr></thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <div class="reset-section">
+        <button class="reset-btn" onclick="resetAll()">
+            <i class="fas fa-trash-alt"></i> Reset Financial History
+        </button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, Timestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA82bYdXDLQJAY8UIkFztzLoKWXQM4g8vA",
+        authDomain: "farm-d3eaa.firebaseapp.com",
+        projectId: "farm-d3eaa",
+        storageBucket: "farm-d3eaa.appspot.com",
+        messagingSenderId: "515868951849",
+        appId: "1:515868951849:web:e7abd02182bb3b04402338"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function init() {
+        let rev = 0, exp = 0;
+        const list = [];
+
+        // 1. Get Dog data
+        const dogs = await getDocs(collection(db, "Dog"));
+        dogs.forEach(d => {
+            const data = d.data();
+            const val = Number(data["Monthly payment amount"]) || 0;
+            rev += val;
+            list.push({ date: data.CreatedAt || Timestamp.now(), desc: `Dog: ${data.Name}`, amt: val, type: 'Income' });
+        });
+
+        // 2. Get Transaction history
+        const trans = await getDocs(query(collection(db, "Transactions"), orderBy("date", "desc")));
+        trans.forEach(t => {
+            const data = t.data();
+            const val = Number(data.amount) || 0;
+            if(data.type === 'Income') rev += val; else exp += val;
+            list.push({ date: data.date, desc: data.source, amt: val, type: data.type });
+        });
+
+        list.sort((a,b) => b.date.seconds - a.date.seconds);
+
+        document.getElementById('totalRevenue').innerText = `$${rev.toLocaleString()}`;
+        document.getElementById('totalExpenses').innerText = `$${exp.toLocaleString()}`;
+        document.getElementById('netProfit').innerText = `$${(rev - exp).toLocaleString()}`;
+
+        document.getElementById('tableBody').innerHTML = list.map(i => `
+            <tr>
+                <td>${new Date(i.date.seconds * 1000).toLocaleDateString()}</td>
+                <td>${i.desc}</td>
+                <td class="${i.type === 'Income' ? 'val-inc' : 'val-exp'}">${i.type === 'Income' ? '+' : '-'}$${i.amt.toLocaleString()}</td>
+            </tr>
+        `).join('');
+    }
+
+    window.save = async (type) => {
+        const desc = document.getElementById(type === 'Income' ? 'incDesc' : 'expDesc').value;
+        const amt = document.getElementById(type === 'Income' ? 'incAmt' : 'expAmt').value;
+        const btn = document.getElementById(type === 'Income' ? 'btnInc' : 'btnExp');
+
+        if(!desc || !amt) return;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        await addDoc(collection(db, "Transactions"), { source: desc, amount: Number(amt), type: type, date: Timestamp.now() });
+        location.reload();
+    }
+
+    window.resetAll = async () => {
+        const pass = prompt("Enter Password to zero cards and clear history:");
+        if (pass === "Lilyzero") {
+            const really = confirm("Warning: This will permanently delete all manual income and expense history. Dog records will stay. Continue?");
+            if (really) {
+                const snap = await getDocs(collection(db, "Transactions"));
+                const batch = snap.docs.map(d => deleteDoc(doc(db, "Transactions", d.id)));
+                await Promise.all(batch);
+                location.reload();
+            }
+        } else if (pass !== null) {
+            alert("Incorrect password.");
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>

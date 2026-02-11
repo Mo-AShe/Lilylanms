@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Details- Lily Land</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #3a8b8a;
+            --dark: #1a2a3a;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        body { 
+            background: url('./backdog.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            color: #333; 
+        }
+
+        .page-wrapper {
+            background: rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 992px) {
+            .container { grid-template-columns: 1fr 380px; }
+            .nav-header { grid-column: span 2; }
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .nav-header { padding: 15px 25px; display: flex; align-items: center; }
+        .back-link { text-decoration: none; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        .hero-card { text-align: center; border-top: 6px solid var(--primary); }
+        .hero-card h1 { margin: 10px 0; font-size: 2.2rem; color: var(--dark); }
+        
+        /* Payment Desk Styles */
+        .action-card { color: white; text-align: center; }
+        .desk-paid { background: rgba(39, 174, 96, 0.9); }
+        .desk-overdue { background: rgba(231, 76, 60, 0.9); }
+        .desk-default { background: rgba(26, 42, 58, 0.9); }
+
+        .payment-status-box { 
+            background: rgba(255, 255, 255, 0.2); 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin: 15px 0; 
+            font-weight: 800; 
+            font-size: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .data-item { 
+            padding: 12px 15px; 
+            background: rgba(255,255,255,0.5); 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 10px;
+            justify-content: space-between;
+            border: 1px solid #eee;
+        }
+
+        .data-label { font-weight: 700; color: var(--primary); font-size: 0.8rem; text-transform: uppercase; width: 40%; }
+        .data-val { font-weight: 500; color: #2c3e50; width: 50%; }
+        .edit-trigger { color: #95a5a6; cursor: pointer; padding: 5px; }
+        .edit-trigger:hover { color: var(--primary); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+
+        .modal-window { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
+        .modal-window input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; }
+
+        .btn { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; flex: 1; }
+        .btn-save { background: var(--primary); color: white; }
+        .btn-cancel { background: #eee; }
+        .pay-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: white; color: var(--dark); font-weight: 800; cursor: pointer; }
+        .delete-btn { width: 100%; padding: 12px; border: none; background: none; color: var(--danger); font-weight: 700; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-window">
+            <h3 id="modalTitle">Edit Field</h3>
+            <div id="inputContainer"></div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-save" id="saveBtn" onclick="processSave()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <nav class="nav-header glass-card">
+            <a href="start-journy.htm" class="back-link"><i class="fas fa-arrow-left"></i> Back to Pack</a>
+        </nav>
+
+        <section class="hero-card glass-card">
+            <div style="font-size: 3rem; color: var(--primary);">
+                <i class="fas fa-dog"></i>
+            </div>
+            <h1 id="dogName">...</h1>
+            <p id="ownerName"></p>
+            <h3 id="paymentAmountDisplay" style="color: var(--primary);">$0.00 / month</h3>
+        </section>
+
+        <aside class="glass-card action-card desk-default" id="paymentDesk">
+            <h3 style="margin:0;"><i class="fas fa-wallet"></i> Payment Desk</h3>
+            <div id="statusBox" class="payment-status-box">Checking...</div>
+            <button id="markPaidBtn" class="pay-btn">Collect Payment</button>
+            <p id="paymentNote" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.9;"></p>
+        </aside>
+
+        <section class="glass-card">
+            <div style="font-weight: 800; margin-bottom: 15px;"><i class="fas fa-list"></i> General Information</div>
+            <div id="mainDataGrid"></div>
+        </section>
+
+        <section class="glass-card">
+            <div style="font-weight: 800; margin-bottom: 15px;"><i class="fas fa-calendar-check"></i> Dates & Timeline</div>
+            <div id="datesGrid"></div>
+            <button id="deleteDogBtn" class="delete-btn" style="margin-top: 20px;">Delete Record</button>
+        </section>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc, deleteDoc, Timestamp, FieldPath } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA82bYdXDLQJAY8UIkFztzLoKWXQM4g8vA",
+        authDomain: "farm-d3eaa.firebaseapp.com",
+        projectId: "farm-d3eaa",
+        storageBucket: "farm-d3eaa.appspot.com",
+        messagingSenderId: "515868951849",
+        appId: "1:515868951849:web:e7abd02182bb3b04402338"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const params = new URLSearchParams(window.location.search);
+    const dogId = params.get('id');
+
+    let currentField = "";
+    let currentIsDate = false;
+
+    async function fetchData() {
+        if (!dogId) return;
+        const snap = await getDoc(doc(db, "Dog", dogId));
+        if (snap.exists()) render(snap.data());
+    }
+
+    function render(data) {
+        document.getElementById('dogName').innerText = data.Name || 'Unnamed Dog';
+        document.getElementById('ownerName').innerText = `Owner: ${data["Owner/Sponser"] || 'Not Assigned'}`;
+        const amt = data["Monthly payment amount"] || 0;
+        document.getElementById('paymentAmountDisplay').innerText = `$${Number(amt).toLocaleString()} / Month`;
+
+        // Logic for Payment Desk
+        const desk = document.getElementById('paymentDesk');
+        const statusBox = document.getElementById('statusBox');
+        const payBtn = document.getElementById('markPaidBtn');
+        const note = document.getElementById('paymentNote');
+
+        if (data["Monthly payment"]) {
+            const due = data["Monthly payment"].seconds ? new Date(data["Monthly payment"].seconds * 1000) : new Date(data["Monthly payment"]);
+            const isOverdue = due < new Date();
+            
+            if (isOverdue) {
+                desk.className = "glass-card action-card desk-overdue";
+                statusBox.innerHTML = `<i class="fas fa-clock"></i> OVERDUE`;
+                payBtn.innerText = "Renew Subscription";
+                note.innerText = "Expired on: " + due.toLocaleDateString();
+            } else {
+                desk.className = "glass-card action-card desk-paid";
+                statusBox.innerHTML = `<i class="fas fa-check-circle"></i> ACTIVE`;
+                payBtn.innerText = "Add 30 Days";
+                note.innerText = "Next payment: " + due.toLocaleDateString();
+            }
+        }
+
+        const infoFields = ["Owner/Sponser", "Pass dog name", "ID", "Monthly payment amount", "Ticket number", "Illnesses", "Allegies", "Food", "Vaccination type", "Dr. Name"];
+        const dateFields = ["Monthly payment", "Arrival date", "Departure date", "Vaccination date taken", "Titer test date"];
+
+        document.getElementById('mainDataGrid').innerHTML = infoFields.map(f => createItem(f, data[f], false)).join('');
+        document.getElementById('datesGrid').innerHTML = dateFields.map(f => createItem(f, data[f], true)).join('');
+    }
+
+    function createItem(label, val, isDate) {
+        let displayVal = val || '-';
+        if (label === "Monthly payment amount") displayVal = `$${Number(val).toLocaleString()}`;
+        else if (val && val.seconds) {
+            displayVal = new Date(val.seconds * 1000).toLocaleDateString();
+        }
+        return `<div class="data-item">
+                    <span class="data-label">${label}</span>
+                    <span class="data-val">${displayVal}</span>
+                    <i class="fas fa-pen edit-trigger" onclick="openModal('${label}', ${isDate})"></i>
+                </div>`;
+    }
+
+    window.openModal = (fieldName, isDate) => {
+        const pass = prompt("Verification Required:");
+        if (pass !== "Lilymod") return;
+        currentField = fieldName;
+        currentIsDate = isDate;
+        document.getElementById('modalTitle').innerText = `Update ${fieldName}`;
+        document.getElementById('inputContainer').innerHTML = isDate 
+            ? `<input type="date" id="modalInput">` 
+            : `<input type="text" id="modalInput" placeholder="New value...">`;
+        document.getElementById('editModal').style.display = 'flex';
+    };
+
+    window.closeModal = () => { document.getElementById('editModal').style.display = 'none'; };
+
+    window.processSave = async () => {
+        const val = document.getElementById('modalInput').value;
+        if (!val) return;
+        try {
+            let final = currentIsDate ? Timestamp.fromDate(new Date(val)) : (currentField.includes("amount") ? Number(val) : val);
+            await updateDoc(doc(db, "Dog", dogId), new FieldPath(currentField), final);
+            location.reload();
+        } catch (e) { alert(e.message); }
+    };
+
+    document.getElementById('markPaidBtn').onclick = async () => {
+        if (!confirm("Add 30 days to subscription?")) return;
+        const next = new Date();
+        next.setDate(next.getDate() + 30);
+        await updateDoc(doc(db, "Dog", dogId), { "Monthly payment": Timestamp.fromDate(next) });
+        location.reload();
+    };
+
+    document.getElementById('deleteDogBtn').onclick = async () => {
+        if (prompt("Type 'Lily26' to delete:") === "Lily26") {
+            await deleteDoc(doc(db, "Dog", dogId));
+            window.location.href = "start-journy.htm";
+        }
+    };
+
+    fetchData();
+</script>
+</body>
+</html>

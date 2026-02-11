@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Friend - Lily Land</title>
+    <link rel="stylesheet" href="start-journy.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-container { max-width: 900px; margin: 20px auto; padding: 20px; }
+        .form-card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--primary); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .form-section-title { color: var(--dark); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9rem; }
+        .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        .submit-area { text-align: center; margin-top: 30px; }
+        .submit-btn { background: var(--primary); color: white; border: none; padding: 15px 50px; border-radius: 999px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover { background: #2d6d6c; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <header class="header">
+        <a href="index.htm" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+        <h1>🐾 Add a New Friend</h1>
+    </header>
+
+    <main class="form-container">
+        <form id="addDogForm">
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-id-card"></i> Basic Identity</h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Dog Name</label>
+                        <input type="text" id="Name" required placeholder="Friend's Name">
+                    </div>
+                    <div class="input-group">
+                        <label>Passport Name</label>
+                        <input type="text" id="PassDogName">
+                    </div>
+                    <div class="input-group">
+                        <label>System ID (Number)</label>
+                        <input type="number" id="DogID">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-file-invoice-dollar"></i> Ownership & Finance</h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Owner / Sponsor</label>
+                        <input type="text" id="OwnerSponser" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Monthly Payment Amount ($)</label>
+                        <input type="number" id="PaymentAmount" required placeholder="e.g. 150">
+                    </div>
+                    <div class="input-group">
+                        <label>Monthly Payment Due Date</label>
+                        <input type="date" id="MonthlyPayment" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-stethoscope"></i> Medical Records</h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Dr. Name</label>
+                        <input type="text" id="DrName">
+                    </div>
+                    <div class="input-group">
+                        <label>Vaccination Type</label>
+                        <input type="text" id="VaccinationType">
+                    </div>
+                    <div class="input-group">
+                        <label>Food Type</label>
+                        <input type="text" id="Food">
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Allergies</label>
+                        <input type="text" id="Allegies">
+                    </div>
+                    <div class="input-group">
+                        <label>Illnesses</label>
+                        <input type="text" id="Illnesses">
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Vaccination Date Taken</label>
+                        <input type="date" id="VaccinationDateTaken">
+                    </div>
+                    <div class="input-group">
+                        <label>Titer Test Date</label>
+                        <input type="date" id="TiterTestDate">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-plane"></i> Logistics & Travel</h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Arrival Date</label>
+                        <input type="date" id="ArrivalDate">
+                    </div>
+                    <div class="input-group">
+                        <label>Departure Date</label>
+                        <input type="date" id="DepartureDate">
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Ticket Number</label>
+                        <input type="number" id="TicketNumber">
+                    </div>
+                    <div class="input-group">
+                        <label>Ticket Issued Date</label>
+                        <input type="date" id="TicketIssuedDate">
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-area">
+                <button type="submit" class="submit-btn" id="saveBtn">Save Record</button>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA82bYdXDLQJAY8UIkFztzLoKWXQM4g8vA",
+        authDomain: "farm-d3eaa.firebaseapp.com",
+        projectId: "farm-d3eaa",
+        storageBucket: "farm-d3eaa.appspot.com",
+        messagingSenderId: "515868951849",
+        appId: "1:515868951849:web:e7abd02182bb3b04402338"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('addDogForm');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.disabled = true;
+        saveBtn.innerText = "Processing...";
+
+        // Helper to convert input value to Firestore Timestamp or null
+        const toTimestamp = (id) => {
+            const val = document.getElementById(id).value;
+            // Using a simple date string is safer for monthly tracking
+            return val ? Timestamp.fromDate(new Date(val)) : null;
+        };
+
+        const newDog = {
+            "Name": document.getElementById('Name').value,
+            "Pass dog name": document.getElementById('PassDogName').value,
+            "ID": Number(document.getElementById('DogID').value),
+            "Owner/Sponser": document.getElementById('OwnerSponser').value,
+            "Monthly payment amount": Number(document.getElementById('PaymentAmount').value), // Added for finance tracking
+            "Dr. Name": document.getElementById('DrName').value,
+            "Allegies": document.getElementById('Allegies').value,
+            "Illnesses": document.getElementById('Illnesses').value,
+            "Food": document.getElementById('Food').value,
+            "Vaccination type": document.getElementById('VaccinationType').value,
+            "Ticket number": Number(document.getElementById('TicketNumber').value),
+            // Timestamps
+            "Monthly payment": toTimestamp('MonthlyPayment'),
+            "Vaccination date taken": toTimestamp('VaccinationDateTaken'),
+            "Titer test date": toTimestamp('TiterTestDate'),
+            "Arrival date": toTimestamp('ArrivalDate'),
+            "Departure date": toTimestamp('DepartureDate'),
+            "Ticket issued date": toTimestamp('TicketIssuedDate'),
+            "CreatedAt": Timestamp.now()
+        };
+
+        try {
+            await addDoc(collection(db, "Dog"), newDog);
+            alert("Success! Dog record created.");
+            window.location.href = "start-journy.htm";
+        } catch (error) {
+            console.error(error);
+            alert("Error saving data.");
+            saveBtn.disabled = false;
+            saveBtn.innerText = "Save Record";
+        }
+    });
+</script>
+</body>
+</html>

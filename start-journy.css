@@ -1,0 +1,127 @@
+:root {
+  --primary: #3a8b8a;
+  --dark: #1a2a3a;
+  --text: #2d3748;
+  --glass: rgba(255, 255, 255, 0.8);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  /* Matches your index background */
+  background: url('./backroundjr.png') no-repeat center center fixed;
+  background-size: cover;
+  color: var(--text);
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.1); /* Subtle tint */
+}
+
+/* Header */
+.header {
+  max-width: 1100px;
+  margin: 40px auto 30px;
+  padding: 20px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  position: relative;
+  text-align: center;
+}
+
+.back-btn {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Search Box */
+.search-box {
+  max-width: 500px;
+  margin: 0 auto 40px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  font-size: 1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  outline: none;
+}
+
+/* Grid */
+.results {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Dog Card Styling */
+.card {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  transition: 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  background: white;
+}
+
+.card h3 {
+  color: var(--primary);
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Status Badges */
+.payment-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.status-overdue { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.status-paid { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+.status-none { background: #f3f4f6; color: #6b7280; }
+
+@media (max-width: 600px) {
+  .header { padding-top: 60px; }
+  .back-btn { top: 20px; transform: none; }
+}
